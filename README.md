@@ -8,6 +8,26 @@ A responsive flight booking website built with HTML, CSS, and JavaScript. Flight
 
 Flightly is a front-end web development project designed to simulate the user experience of an online flight booking platform. Users can explore sample flights, enter passenger details, select seats, review booking information, and complete a demo checkout.
 
+## 🖥️ Project Screenshots
+
+### Homepage
+![Flightly Homepage](homepage.png)
+
+### Flight Search Results
+![Flight Search Results](flight-results.png)
+
+### Flight Details
+![Flight Details](flight-details.png)
+
+### Passenger Information
+![Passenger Information](passenger-information.png)
+
+### Seat Selection
+![Seat Selection](seat-selection.png)
+
+### Demo Payment Page
+![Demo Payment Page](payment-page.png)
+
 ## ✨ Features
 
 - **Flight Search:** Search available sample routes and view flight results.
