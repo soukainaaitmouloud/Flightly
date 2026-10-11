@@ -1,0 +1,923 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flightly | Book Your Journey</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <div class="logo">✈️ Flightly</div>
+
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#destinations">Explore</a>
+            <a href="#flightResults">Flights</a>
+            <a href="#destinations">Deals</a>
+            <a href="#whyFlightly">About</a>
+        </nav>
+
+        <div class="nav-buttons">
+            <button class="login-btn" id="loginButton" type="button">Log in</button>
+            <button class="signup-btn" id="signupButton" type="button">Sign up</button>
+            <button class="login-btn" id="logoutButton" type="button" hidden>Log out</button>
+        </div>
+    </header>
+
+    <!-- ACCOUNT WINDOW -->
+    <dialog class="auth-dialog" id="authDialog" aria-labelledby="authTitle">
+        <div class="auth-dialog-header">
+            <div>
+                <p class="auth-eyebrow">YOUR FLIGHTLY ACCOUNT</p>
+                <h2 id="authTitle">Log in</h2>
+            </div>
+            <button class="auth-close" id="closeAuthDialog" type="button" aria-label="Close account window">×</button>
+        </div>
+
+        <form class="auth-form" id="loginForm">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" required>
+
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+
+            <button class="auth-submit" type="submit">Log in</button>
+            <p class="auth-switch">New to Flightly? <button id="switchToSignup" type="button">Create an account</button></p>
+        </form>
+
+        <form class="auth-form" id="signupForm" hidden>
+            <label for="signupName">Full name</label>
+            <input id="signupName" name="name" type="text" autocomplete="name" minlength="2" required>
+
+            <label for="signupEmail">Email</label>
+            <input id="signupEmail" name="email" type="email" autocomplete="email" required>
+
+            <label for="signupPassword">Password</label>
+            <input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" required>
+            <small class="auth-help">Use at least 8 characters.</small>
+
+            <button class="auth-submit" type="submit">Create account</button>
+            <p class="auth-switch">Already have an account? <button id="switchToLogin" type="button">Log in</button></p>
+        </form>
+
+        <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+    </dialog>
+
+    <main>
+        <!-- HERO AND FLIGHT SEARCH -->
+        <section class="hero">
+            <div class="hero-content">
+                <p class="hero-small-title">✈️ EXPLORE THE WORLD</p>
+                <h1>Your Journey<br>Starts <span>Here.</span></h1>
+                <p class="hero-description">
+                    Discover amazing destinations, compare flights,
+                    and book your next adventure with Flightly.
+                </p>
+            </div>
+
+            <div class="search-box">
+                <div class="trip-options">
+                    <button class="active" type="button">Round Trip</button>
+                    <button type="button">One Way</button>
+                    <button type="button">Multi City</button>
+                </div>
+
+                <div class="search-fields">
+                    <div class="search-field">
+                        <label for="fromInput">From</label>
+                        <input id="fromInput" type="text" placeholder="Casablanca (CMN)">
+                    </div>
+
+                    <button class="swap" id="swapBtn" type="button"
+                        aria-label="Swap departure and destination">⇄</button>
+
+                    <div class="search-field">
+                        <label for="toInput">To</label>
+                        <input id="toInput" type="text" placeholder="Paris (CDG)">
+                    </div>
+
+                    <div class="search-field">
+                        <label for="departureDate">Departure</label>
+                        <input id="departureDate" type="date">
+                    </div>
+
+                    <div class="search-field">
+                        <label for="returnDate">Return</label>
+                        <input id="returnDate" type="date">
+                    </div>
+
+                    <div class="search-field">
+                        <label for="passengers">Passengers</label>
+                        <select id="passengers">
+                            <option value="1">1 Adult</option>
+                            <option value="2">2 Adults</option>
+                            <option value="3">3 Adults</option>
+                            <option value="4">4 Adults</option>
+                        </select>
+                    </div>
+
+                    <button class="search-btn" id="searchBtn" type="button">
+                        Search Flights
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLIGHT RESULTS -->
+        <section class="flight-results" id="flightResults">
+            <div class="results-header">
+                <div>
+                    <p>FLIGHT RESULTS</p>
+                    <h2>
+                        <span id="resultsFrom">Casablanca</span>
+                        →
+                        <span id="resultsTo">Paris</span>
+                    </h2>
+                    <small id="resultsInfo">
+                        Choose the flight that works best for you.
+                    </small>
+                </div>
+                <div class="results-count">3 flights found</div>
+            </div>
+
+            <div class="results-tools">
+                <button class="filter-btn active-filter" type="button" data-filter="best">Best</button>
+                <button class="filter-btn" type="button" data-filter="cheapest">Cheapest</button>
+                <button class="filter-btn" type="button" data-filter="fastest">Fastest</button>
+
+                <select class="sort-select" id="sortSelect">
+                    <option value="recommended">Sort: Recommended</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                    <option value="duration">Duration: Shortest</option>
+                </select>
+            </div>
+
+            <div class="flight-list">
+                <!-- FLIGHT 1 -->
+                <div class="flight-card"
+                    data-airline="Royal Air Maroc"
+                    data-flight="AT 750"
+                    data-departure="09:20"
+                    data-from="CMN"
+                    data-arrival="13:15"
+                    data-to="CDG"
+                    data-duration="3h 55m"
+                    data-price="€199">
+
+                    <div class="airline">
+                        <div class="airline-logo">✈️</div>
+                        <div>
+                            <strong>Royal Air Maroc</strong>
+                            <span>AT 750</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-route">
+                        <div class="airport-time">
+                            <strong>09:20</strong>
+                            <span>CMN</span>
+                        </div>
+
+                        <div class="route-line">
+                            <span>3h 55m</span>
+                            <div class="line">
+                                <span class="dot"></span>
+                                <span class="plane">✈</span>
+                                <span class="dot"></span>
+                            </div>
+                            <small>Direct</small>
+                        </div>
+
+                        <div class="airport-time">
+                            <strong>13:15</strong>
+                            <span>CDG</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-price">
+                        <span>From</span>
+                        <strong>€199</strong>
+                        <button class="select-flight" type="button">Select</button>
+                    </div>
+                </div>
+
+                <!-- FLIGHT 2 -->
+                <div class="flight-card"
+                    data-airline="Air France"
+                    data-flight="AF 1497"
+                    data-departure="11:45"
+                    data-from="CMN"
+                    data-arrival="15:50"
+                    data-to="CDG"
+                    data-duration="4h 05m"
+                    data-price="€229">
+
+                    <div class="airline">
+                        <div class="airline-logo">✈️</div>
+                        <div>
+                            <strong>Air France</strong>
+                            <span>AF 1497</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-route">
+                        <div class="airport-time">
+                            <strong>11:45</strong>
+                            <span>CMN</span>
+                        </div>
+
+                        <div class="route-line">
+                            <span>4h 05m</span>
+                            <div class="line">
+                                <span class="dot"></span>
+                                <span class="plane">✈</span>
+                                <span class="dot"></span>
+                            </div>
+                            <small>Direct</small>
+                        </div>
+
+                        <div class="airport-time">
+                            <strong>15:50</strong>
+                            <span>CDG</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-price">
+                        <span>From</span>
+                        <strong>€229</strong>
+                        <button class="select-flight" type="button">Select</button>
+                    </div>
+                </div>
+
+                <!-- FLIGHT 3 -->
+                <div class="flight-card"
+                    data-airline="Transavia"
+                    data-flight="TO 3021"
+                    data-departure="16:30"
+                    data-from="CMN"
+                    data-arrival="20:50"
+                    data-to="CDG"
+                    data-duration="4h 20m"
+                    data-price="€179">
+
+                    <div class="airline">
+                        <div class="airline-logo">✈️</div>
+                        <div>
+                            <strong>Transavia</strong>
+                            <span>TO 3021</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-route">
+                        <div class="airport-time">
+                            <strong>16:30</strong>
+                            <span>CMN</span>
+                        </div>
+
+                        <div class="route-line">
+                            <span>4h 20m</span>
+                            <div class="line">
+                                <span class="dot"></span>
+                                <span class="plane">✈</span>
+                                <span class="dot"></span>
+                            </div>
+                            <small>Direct</small>
+                        </div>
+
+                        <div class="airport-time">
+                            <strong>20:50</strong>
+                            <span>CDG</span>
+                        </div>
+                    </div>
+
+                    <div class="flight-price">
+                        <span>From</span>
+                        <strong>€179</strong>
+                        <button class="select-flight" type="button">Select</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLIGHT DETAILS -->
+            <div class="flight-details" id="flightDetails" style="display: none;">
+                <div class="details-header">
+                    <div>
+                        <p>SELECTED FLIGHT</p>
+                        <h2>Flight Details</h2>
+                        <span>Review your flight before continuing.</span>
+                    </div>
+
+                    <button class="back-results" id="backResults" type="button">
+                        ← Back to Results
+                    </button>
+                </div>
+
+                <div class="selected-flight-card">
+                    <div class="selected-airline">
+                        <div class="selected-airline-logo">✈️</div>
+                        <div>
+                            <strong id="selectedAirline">Royal Air Maroc</strong>
+                            <span id="selectedFlightNumber">AT 750</span>
+                        </div>
+                    </div>
+
+                    <div class="selected-route">
+                        <div>
+                            <strong id="selectedDeparture">09:20</strong>
+                            <span id="selectedFrom">CMN</span>
+                        </div>
+
+                        <div class="selected-route-line">
+                            <span id="selectedDuration">3h 55m</span>
+                            <div></div>
+                            <small>Direct</small>
+                        </div>
+
+                        <div>
+                            <strong id="selectedArrival">13:15</strong>
+                            <span id="selectedTo">CDG</span>
+                        </div>
+                    </div>
+
+                    <div class="selected-price">
+                        <span>Total</span>
+                        <strong id="selectedPrice">€199</strong>
+                    </div>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-box">
+                        <div class="detail-icon">🧳</div>
+                        <div>
+                            <strong>Baggage</strong>
+                            <p>1 cabin bag + 1 personal item</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-icon">💺</div>
+                        <div>
+                            <strong>Cabin</strong>
+                            <p>Economy Class</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-icon">🍽️</div>
+                        <div>
+                            <strong>Meal</strong>
+                            <p>Meal available</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-box">
+                        <div class="detail-icon">🔄</div>
+                        <div>
+                            <strong>Changes</strong>
+                            <p>Flexible options available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-bottom">
+                    <div>
+                        <span>Selected flight</span>
+                        <strong id="bottomPrice">€199</strong>
+                    </div>
+
+                    <button class="continue-booking" id="continueBooking" type="button">
+                        Continue to Booking →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASSENGER BOOKING -->
+        <section class="booking-section" id="bookingSection" style="display: none;">
+            <div class="booking-container">
+                <div class="booking-header">
+                    <p>BOOK YOUR FLIGHT</p>
+                    <h2>Passenger Information</h2>
+                    <span>Enter your details to continue with your booking.</span>
+                </div>
+
+                <div class="booking-layout">
+                    <div class="passenger-card">
+                        <div class="card-title">
+                            <div>
+                                <h3>Passenger 1</h3>
+                                <p>Enter the passenger's information exactly as shown on their travel document.</p>
+                            </div>
+                            <span>Adult</span>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input id="firstName" type="text" placeholder="Enter first name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input id="lastName" type="text" placeholder="Enter last name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input id="email" type="email" placeholder="example@email.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input id="phone" type="tel" placeholder="+212 6 XX XX XX XX">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input id="dateOfBirth" type="date">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nationality">Nationality</label>
+                                <select id="nationality">
+                                    <option value="">Select nationality</option>
+                                    <option value="morocco">Morocco</option>
+                                    <option value="france">France</option>
+                                    <option value="spain">Spain</option>
+                                    <option value="china">China</option>
+                                    <option value="uae">United Arab Emirates</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="passport">Passport / ID Number</label>
+                                <input id="passport" type="text" placeholder="Enter document number">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender">
+                                    <option value="">Select gender</option>
+                                    <option value="female">Female</option>
+                                    <option value="male">Male</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="specialRequest">
+                                Special Request <span>(Optional)</span>
+                            </label>
+                            <textarea id="specialRequest" rows="4" placeholder="Any special request?"></textarea>
+                        </div>
+
+                        <label class="checkbox-row">
+                            <input type="checkbox" id="savePassenger">
+                            <span>Save passenger information for future bookings</span>
+                        </label>
+                    </div>
+
+                    <!-- BOOKING SUMMARY -->
+                    <aside class="booking-summary">
+                        <h3>Booking Summary</h3>
+
+                        <div class="summary-flight">
+                            <div>
+                                <strong id="bookingAirline">Royal Air Maroc</strong>
+                                <span id="bookingFlight">AT 750</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-route">
+                            <div>
+                                <strong id="bookingDeparture">09:20</strong>
+                                <span id="bookingFrom">CMN</span>
+                            </div>
+                            <span>→</span>
+                            <div>
+                                <strong id="bookingArrival">13:15</strong>
+                                <span id="bookingTo">CDG</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-row">
+                            <span>Flight</span>
+                            <strong id="bookingPrice">€199</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Passenger</span>
+                            <strong>1 Adult</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Cabin</span>
+                            <strong>Economy</strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <strong id="bookingTotal">€199</strong>
+                        </div>
+
+                        <button class="seat-selection-btn" id="seatSelectionBtn" type="button">
+                            Continue to Seat Selection →
+                        </button>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEAT SELECTION -->
+        <section class="seat-selection-section" id="seatSelectionSection" style="display: none;">
+            <div class="seat-container">
+                <div class="seat-header">
+                    <div>
+                        <p>SELECT YOUR SEAT</p>
+                        <h2>Choose Your Seat</h2>
+                        <span>Select the seat you would like for your journey.</span>
+                    </div>
+                </div>
+
+                <div class="seat-flight-info">
+                    <div class="seat-flight-airline">
+                        <div class="seat-airline-icon">✈️</div>
+                        <div>
+                            <strong id="seatAirline">Royal Air Maroc</strong>
+                            <span id="seatFlightNumber">AT 750</span>
+                        </div>
+                    </div>
+
+                    <div class="seat-flight-route">
+                        <div>
+                            <strong id="seatDeparture">09:20</strong>
+                            <span id="seatFrom">CMN</span>
+                        </div>
+                        <span class="seat-arrow">→</span>
+                        <div>
+                            <strong id="seatArrival">13:15</strong>
+                            <span id="seatTo">CDG</span>
+                        </div>
+                    </div>
+
+                    <div class="seat-flight-price">
+                        <span>Flight</span>
+                        <strong id="seatFlightPrice">€199</strong>
+                    </div>
+                </div>
+
+                <div class="seat-layout">
+                    <div class="airplane-card">
+                        <div class="airplane-front">
+                            <div class="cockpit">✈️</div>
+                            <span>FRONT</span>
+                        </div>
+
+                        <div class="seat-column-labels">
+                            <span>A</span>
+                            <span>B</span>
+                            <span>C</span>
+                            <span class="aisle-space"></span>
+                            <span>D</span>
+                            <span>E</span>
+                            <span>F</span>
+                        </div>
+
+                        <!-- JavaScript creates the seat rows here -->
+                        <div id="seatMap"></div>
+
+                        <div class="airplane-rear">
+                            <span>REAR</span>
+                        </div>
+                    </div>
+
+                    <aside class="seat-summary">
+                        <h3>Seat Selection</h3>
+                        <p class="seat-summary-text">Choose one available seat for your journey.</p>
+
+                        <div class="seat-legend">
+                            <div class="legend-item">
+                                <span class="legend-seat available"></span>
+                                <span>Available</span>
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-seat selected"></span>
+                                <span>Selected</span>
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-seat occupied"></span>
+                                <span>Occupied</span>
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-seat premium"></span>
+                                <span>Premium</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="selected-seat-info">
+                            <span>Selected Seat</span>
+                            <strong id="selectedSeat">Not selected</strong>
+                        </div>
+
+                        <div class="seat-price-row">
+                            <span>Seat Price</span>
+                            <strong id="seatPrice">€0</strong>
+                        </div>
+
+                        <div class="seat-price-row">
+                            <span>Flight</span>
+                            <strong id="seatBasePrice">€199</strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="seat-total">
+                            <span>Total</span>
+                            <strong id="seatTotal">€199</strong>
+                        </div>
+
+                        <button class="back-passenger-btn" id="backPassenger" type="button">
+                            ← Back to Passenger
+                        </button>
+
+                        <button class="payment-btn" id="paymentBtn" type="button">
+                            Continue to Payment →
+                        </button>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAYMENT PAGE: AFTER SEAT SELECTION -->
+        <section id="paymentSection" class="payment-section" style="display: none;">
+            <div class="payment-container">
+                <div class="payment-header">
+                    <p>SECURE CHECKOUT</p>
+                    <h2>Complete Your Booking</h2>
+                    <span>Review your journey and complete your demo booking.</span>
+                </div>
+
+                <div class="payment-steps">
+                    <div class="payment-step completed">
+                        <span>✓</span>
+                        <small>Flight</small>
+                    </div>
+                    <div class="payment-step completed">
+                        <span>✓</span>
+                        <small>Passenger</small>
+                    </div>
+                    <div class="payment-step completed">
+                        <span>✓</span>
+                        <small>Seat</small>
+                    </div>
+                    <div class="payment-step active">
+                        <span>4</span>
+                        <small>Payment</small>
+                    </div>
+                </div>
+
+                <div class="payment-layout">
+                    <!-- DEMO PAYMENT FORM -->
+                    <div class="payment-form-card">
+                        <div class="payment-card-heading">
+                            <div>
+                                <h3>Payment Method</h3>
+                                <p>Choose your preferred payment method.</p>
+                            </div>
+                            <span class="payment-lock">🔒 Demo</span>
+                        </div>
+
+                        <div class="payment-method">
+                            <span>💳</span>
+                            <div>
+                                <strong>Credit or Debit Card</strong>
+                                <small>This demo does not process payments.</small>
+                            </div>
+                        </div>
+
+                        <form id="paymentForm">
+                            <div class="payment-input-group">
+                                <label for="cardholderName">Cardholder Name</label>
+                                <input id="cardholderName" type="text"
+                                    placeholder="Example: Alex Morgan" autocomplete="off" required>
+                            </div>
+
+                            <div class="payment-input-group">
+                                <label for="cardNumber">Demo Card Number</label>
+                                <input id="cardNumber" type="text" inputmode="numeric"
+                                    placeholder="Enter a fictional test number"
+                                    autocomplete="off" maxlength="23" required>
+                            </div>
+
+                            <div class="payment-form-row">
+                                <div class="payment-input-group">
+                                    <label for="cardExpiry">Expiry Date</label>
+                                    <input id="cardExpiry" type="text" placeholder="MM/YY"
+                                        autocomplete="off" maxlength="5" required>
+                                </div>
+
+                                <div class="payment-input-group">
+                                    <label for="cardCvc">Security Code</label>
+                                    <input id="cardCvc" type="password" inputmode="numeric"
+                                        placeholder="CVC" autocomplete="off" maxlength="4" required>
+                                </div>
+                            </div>
+
+                            <p class="payment-demo-notice">
+                                DEMO ONLY: Never enter real card details.
+                                No payment will be processed.
+                            </p>
+
+                            <button class="confirm-payment-btn" type="submit">
+                                Confirm Demo Booking →
+                            </button>
+
+                            <button class="return-seat-btn" id="returnToSeat" type="button">
+                                ← Return to Seat Selection
+                            </button>
+
+                            <p id="paymentMessage" class="payment-message" role="status"></p>
+                        </form>
+                    </div>
+
+                    <!-- JOURNEY SUMMARY -->
+                    <aside class="payment-summary-card">
+                        <div class="payment-summary-top">
+                            <span>YOUR JOURNEY</span>
+                            <span>✈ FLIGHTLY</span>
+                        </div>
+
+                        <div class="payment-route-display">
+                            <div>
+                                <strong id="paymentFrom">CMN</strong>
+                                <span id="paymentDeparture">09:20</span>
+                            </div>
+
+                            <div class="payment-route-line">
+                                <span>✈</span>
+                                <div></div>
+                            </div>
+
+                            <div>
+                                <strong id="paymentTo">CDG</strong>
+                                <span id="paymentArrival">13:15</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-summary-details">
+                            <div>
+                                <span>Airline</span>
+                                <strong id="paymentAirline">Royal Air Maroc</strong>
+                            </div>
+                            <div>
+                                <span>Flight</span>
+                                <strong id="paymentFlightNumber">AT 750</strong>
+                            </div>
+                            <div>
+                                <span>Passenger</span>
+                                <strong id="paymentPassenger">—</strong>
+                            </div>
+                            <div>
+                                <span>Selected Seat</span>
+                                <strong id="paymentSeat">—</strong>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="payment-price-row">
+                            <span>Flight Price</span>
+                            <strong id="paymentFlightPrice">€199</strong>
+                        </div>
+
+                        <div class="payment-price-row">
+                            <span>Seat Fee</span>
+                            <strong id="paymentSeatPrice">€0</strong>
+                        </div>
+
+                        <div class="payment-total-row">
+                            <span>Total to Pay</span>
+                            <strong id="paymentTotal">€199</strong>
+                        </div>
+
+                        <p class="payment-summary-note">
+                            Demo booking only. No real payment will be taken.
+                        </p>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- POPULAR DESTINATIONS -->
+        <section class="destinations" id="destinations">
+            <div class="section-heading">
+                <div>
+                    <p>DISCOVER</p>
+                    <h2>Popular Destinations</h2>
+                </div>
+                <a href="#flightResults">View all →</a>
+            </div>
+
+            <div class="destination-grid">
+                <div class="destination-card">
+                    <div class="destination-image paris"><span>🇫🇷</span></div>
+                    <div class="destination-info">
+                        <h3>Paris</h3>
+                        <p>France</p>
+                        <strong>From €199</strong>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image dubai"><span>🇦🇪</span></div>
+                    <div class="destination-info">
+                        <h3>Dubai</h3>
+                        <p>United Arab Emirates</p>
+                        <strong>From €249</strong>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image istanbul"><span>🇹🇷</span></div>
+                    <div class="destination-info">
+                        <h3>Istanbul</h3>
+                        <p>Türkiye</p>
+                        <strong>From €189</strong>
+                    </div>
+                </div>
+
+                <div class="destination-card">
+                    <div class="destination-image barcelona"><span>🇪🇸</span></div>
+                    <div class="destination-info">
+                        <h3>Barcelona</h3>
+                        <p>Spain</p>
+                        <strong>From €159</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY FLIGHTLY -->
+        <section class="why-flightly" id="whyFlightly">
+            <div class="section-heading center">
+                <p>WHY FLIGHTLY</p>
+                <h2>Travel smarter.<br>Travel better.</h2>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🔎</div>
+                    <h3>Easy Search</h3>
+                    <p>Find the best flights quickly and easily.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Best Prices</h3>
+                    <p>Compare prices and discover amazing deals.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure Booking</h3>
+                    <p>Your booking and personal information stay protected.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Global Destinations</h3>
+                    <p>Explore destinations around the world.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">✈️ Flightly</div>
+        <p>Your journey starts here.</p>
+        <p class="copyright">© 2026 Flightly. All rights reserved.</p>
+    </footer>
+
+    <!-- Supabase provides real account sign-up and login. -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
